@@ -35,6 +35,7 @@
 
     <modules>
         <module>karaf</module>
+        <module>decanter</module>
     </modules>
 
     <properties>
@@ -44,6 +45,7 @@
 
         <karaf.version>4.2.5</karaf.version>
         <camel.version>3.0.0-M2</camel.version>
+        <camel2.version>2.24.0</camel2.version>
 
         <slf4j.version>1.7.25</slf4j.version>
         <junit.version>5.3.1</junit.version>

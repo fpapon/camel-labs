@@ -20,8 +20,11 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.model.RouteDefinition;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.apache.camel.builder.Builder.constant;
 
 public class CamelServiceTest {
 
@@ -73,6 +76,26 @@ public class CamelServiceTest {
         };
         camelContext.addRoutes(routeBuilder);
         System.out.println("camel routes jetty added -> http://localhost:9090/labs");
+        Thread.sleep(10000L);
+    }
+
+    @Test
+    public void publishHttpCamelContextWithDefinitionTest() throws Exception {
+        CamelContext camelContext = new DefaultCamelContext();
+        Assertions.assertNotNull(camelContext);
+
+        DefaultCamelContext.class.cast(camelContext).setName("camel-labs");
+        camelContext.start();
+        Assertions.assertTrue(camelContext.getStatus().isStarted());
+        System.out.println("camel context started");
+
+        final RouteDefinition definition = new RouteDefinition();
+        definition.from("jetty:http://localhost:9090/labs").id("jetty-example").
+                setHeader(Exchange.HTTP_RESPONSE_CODE,constant(200)).
+                setBody(constant("it works well!"));
+
+        DefaultCamelContext.class.cast(camelContext).addRouteDefinition(definition);
+        System.out.println("camel routes with definition jetty added -> http://localhost:9090/labs");
         Thread.sleep(10000L);
     }
 }
